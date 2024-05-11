@@ -1,9 +1,23 @@
 import select
 import socket
+import sys
+
+from utils import utfDecode
 
 HEADER_LENGTH = 10
 IP = "127.0.0.1"
 PORT = 1234
+
+sys.argv
+for arg in sys.argv:
+    if "port" in arg:
+        PORT = int(arg.split("=")[-1])
+        print(PORT)
+    if "ip" in arg:
+        IP = arg.split(":")[-1]
+    if "header_length" in arg:
+        HEADER_LENGTH = int(arg.split(":")[-1])
+
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -15,19 +29,22 @@ server_socket.listen()
 sockets_list = [server_socket]
 
 clients = {}
-print("foi")
+
+print(f"[ INFO ] Running server on {IP}:{PORT}...")
 
 
 def receive_message(client_socket):
     try:
         message_header = client_socket.recv(HEADER_LENGTH)
         if not len(message_header):
+            print("[ ERROR ] Empty Header")
             return False
 
-        message_length = int(message_header.decote("utf-8").strip())
+        message_length = int(utfDecode(message_header).strip())
         return {"header": message_header, "data": client_socket.recv(message_length)}
 
-    except:
+    except Exception as e:
+        print("[ ERROR ] ", e)
         return False
 
 
@@ -46,7 +63,7 @@ while True:
             clients[client_socket] = user
 
             print(
-                f"Accepted new connection from {client_address[0]}:{client_address[1]} - username:{user['data'].decode('utf-8')}"
+                f"[ INFO ] Accepted new connection from {client_address[0]}:{client_address[1]} - username: {utfDecode(user['data'])}"
             )
 
         else:
@@ -54,16 +71,15 @@ while True:
 
             if message is False:
                 print(
-                    f"Closed connection from {clients[notified_socket]['data'].decode('utf-8')}"
+                    f"[ INFO ] Closed connection from {utfDecode(clients[notified_socket]['data'])}"
                 )
                 sockets_list.remove(notified_socket)
                 del clients[notified_socket]
                 continue
 
             user = clients[notified_socket]
-            print(
-                f"Recieved message from {user['data'].decode('utf-8')}: {message['data'].decode('uft-8')}"
-            )
+
+            print(f"{utfDecode(user['data'])} > {utfDecode(message['data'])}")
 
             for client_socket in clients:
                 if client_socket != notified_socket:
