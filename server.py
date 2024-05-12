@@ -2,7 +2,7 @@ import select
 import socket
 import sys
 
-from utils import utfDecode
+from utils.utils import utfDecode
 
 HEADER_LENGTH = 10
 IP = "127.0.0.1"

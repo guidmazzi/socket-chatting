@@ -1,6 +1,6 @@
 import socket
 
-from utils import utfEncode
+from utils.utils import utfEncode
 
 HEADER_LENGTH = 10
 IP = "127.0.0.1"
