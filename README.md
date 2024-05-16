@@ -9,18 +9,18 @@ Python scripts to host a port for connection and start connection of a chat room
 Clone the repository and run the 'server.py' file to create a server for the chatting:
 - Linux:
     ```
-    python3 setup.py
+    python3 server.py
     ```
 
 - Windows:
     ```
-    py setup.py
+    py server.py
     ```
 
 The server will start on default ip and port (127.0.0.1:1234). If desire to change the ip and port, add the following to the execution of script:
 
 ```
-python3 setup.py ip=${DESIRED_IP} port=${DESIRED_PORT}
+python3 server.py ip=${DESIRED_IP} port=${DESIRED_PORT}
 ```
 
 You have now the chat room running on your desired terminal. All the messages will be printed in that terminal, along with some log prints.
